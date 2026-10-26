@@ -8,7 +8,7 @@
   "css": "host.css",
   "author": "Link & Codex",
   "homePage": "https://github.com/scratchpad200330301/SillyTavern-Fate-Dice-Tray",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "generate_interceptor": "fateDiceTrayIntercept",
   "minimum_client_version": "1.18.0",
   "auto_update": false,

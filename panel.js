@@ -172,7 +172,7 @@ if (embedded) {
     });
     send('hello');
     for (const button of document.querySelectorAll('[data-host]')) button.addEventListener('click', () => send(button.dataset.host));
-    document.addEventListener('keydown', event => { if (event.key === 'Escape') send('close'); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') send('minimize'); });
     const handle = $('window-handle'); let dragging = false;
     handle.addEventListener('pointerdown', event => { if (event.target.closest('button') || event.button !== 0) return; dragging = true; handle.setPointerCapture(event.pointerId); send('drag-start', { x: event.screenX, y: event.screenY }); });
     handle.addEventListener('pointermove', event => { if (dragging) send('drag-move', { x: event.screenX, y: event.screenY }); });
