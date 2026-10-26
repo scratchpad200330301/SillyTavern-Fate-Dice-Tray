@@ -1,0 +1,16 @@
+{
+  "display_name": "命运骰台 · 本地判定",
+  "loading_order": 100,
+  "requires": [],
+  "optional": [],
+  "dependencies": [],
+  "js": "index.js",
+  "css": "host.css",
+  "author": "Link & Codex",
+  "homePage": "https://github.com/scratchpad200330301/SillyTavern-Fate-Dice-Tray",
+  "version": "0.2.0",
+  "generate_interceptor": "fateDiceTrayIntercept",
+  "minimum_client_version": "1.18.0",
+  "auto_update": false,
+  "hooks": { "disable": "onDisable", "delete": "onDisable" }
+}

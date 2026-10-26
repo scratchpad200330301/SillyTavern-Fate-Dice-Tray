@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>命运骰台 · 本地判定</title><link rel="stylesheet" href="panel.css"></head>
+<body>
+<div class="app">
+  <header id="window-handle" class="window-bar">
+    <div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="m16 2 12 7v14l-12 7-12-7V9Z" stroke="currentColor" stroke-width="1.7"/><path d="m16 2 8 21H8L16 2Zm-12 7 12 6 12-6M16 30l-8-7m8 7 8-7" stroke="currentColor" stroke-width="1.3"/></svg></div>
+    <div class="brand"><strong>命运骰台</strong><span>FATE DICE TRAY</span></div>
+    <span class="version">试用版 0.2</span>
+    <div class="window-actions" id="window-actions" hidden><button type="button" data-host="maximize" title="最大化 / 还原" aria-label="最大化或还原">⛶</button><button type="button" data-host="close" title="收起窗口" aria-label="收起窗口">×</button></div>
+  </header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">让选择，接受未知。</p><h1>下一步，交给骰子。</h1></div><span class="local-badge"><i></i> 本地随机</span></div>
+    <details class="auto-settings"><summary><span class="auto-dot"></span> 自动掷骰 <span id="auto-state">已开启</span><small>设置与输入测试</small></summary><div class="auto-content">
+      <label class="check-label"><input id="auto-enabled" type="checkbox" checked> 在本轮正文生成前，读取已发送的用户输入并掷骰</label>
+      <div class="field-grid"><label>行动难度 DC<input id="auto-dc" type="number" min="1" max="200" value="12" required></label><label>行动修正<input id="auto-mod" type="number" min="-100" max="100" value="0" required></label><label>事件概率 %<input id="auto-chance" type="number" min="0" max="100" value="20" required></label></div>
+      <label class="check-label"><input id="auto-fallback" type="checkbox" checked> 其余普通输入也进行背景事件检定</label>
+      <label class="check-label"><input id="auto-show" type="checkbox" checked> 新结果产生时自动显示悬浮窗口</label>
+      <label class="keyword-label" for="auto-actions">行动关键词（逗号分隔）</label><textarea id="auto-actions" rows="2" maxlength="1200"></textarea>
+      <label class="keyword-label" for="auto-rest">休息 / 时间跳跃关键词</label><textarea id="auto-rest" rows="2" maxlength="1200"></textarea>
+      <button type="button" id="save-auto" class="small-button">保存自动规则</button>
+      <p class="rule-hint">行动词 → d20；休息、等待及其他输入 → d100。规则不理解场景强弱，DC 和概率由上方设定。普通对话可取消背景检定；单轮可写【不掷骰】跳过。</p>
+      <div class="input-demo"><label for="test-input">试验一段用户输入</label><textarea id="test-input" rows="2" placeholder="织田跳跃躲开了斩击。"></textarea><button type="button" id="test-auto" class="small-button">测试自动判定</button><small>只在本页面试掷，不发送到酒馆。</small></div>
+    </div></details>
+    <div class="tabs" role="tablist" aria-label="判定类型">
+      <button type="button" role="tab" id="tab-action" aria-controls="pane-action" aria-selected="true" data-kind="action">行动检定</button>
+      <button type="button" role="tab" id="tab-event" aria-controls="pane-event" aria-selected="false" tabindex="-1" data-kind="event">事件触发</button>
+      <button type="button" role="tab" id="tab-free" aria-controls="pane-free" aria-selected="false" tabindex="-1" data-kind="free">自由掷骰</button>
+    </div>
+    <form id="roll-form">
+      <label class="note-label" for="note">判定事项 <span>可选</span></label><input id="note" maxlength="240" placeholder="例如：在敌人的追击中翻越围墙" autocomplete="off">
+      <section id="pane-action" role="tabpanel" aria-labelledby="tab-action">
+        <div class="field-grid"><label>掷骰方式<select id="mode"><option value="normal">常规 · 1d20</option><option value="advantage">优势 · 2d20 取高</option><option value="disadvantage">劣势 · 2d20 取低</option></select></label><label>修正值<input id="action-mod" type="number" value="0" min="-100" max="100" step="1" required></label><label>难度 DC<input id="dc" type="number" value="12" min="1" max="200" step="1" required></label></div>
+        <p class="rule-hint">d20 + 修正 ≥ 难度，即为成功。先确认行动是否可能，再掷骰。</p>
+      </section>
+      <section id="pane-event" role="tabpanel" aria-labelledby="tab-event" hidden>
+        <div class="event-field"><label for="chance">合理事件的触发概率</label><div><input id="chance" type="number" value="20" min="0" max="100" step="1" required><span>%</span></div></div>
+        <p class="rule-hint">掷 d100，点数 ≤ 概率时触发。0% 必不触发，100% 必触发。</p>
+      </section>
+      <section id="pane-free" role="tabpanel" aria-labelledby="tab-free" hidden>
+        <div class="field-grid"><label>骰子<select id="sides"><option value="4">D4</option><option value="6">D6</option><option value="8">D8</option><option value="10">D10</option><option value="12">D12</option><option value="20" selected>D20</option><option value="100">D100</option></select></label><label>数量<input id="count" type="number" value="1" min="1" max="20" required></label><label>修正值<input id="free-mod" type="number" value="0" min="-100" max="100" required></label></div>
+        <p class="rule-hint">显示全部原始点数与总和，不附加成功或失败结论。</p>
+      </section>
+      <div id="result" class="result-card" aria-busy="false">
+        <div class="result-top"><span id="result-label">等待第一次掷骰</span><span id="result-formula">1d20 · DC 12</span></div>
+        <div class="result-center"><div class="die-outline" aria-hidden="true"><svg viewBox="0 0 180 160"><path d="M90 5 166 47v76l-76 32-76-32V47Z M90 5l47 118H43L90 5ZM14 47l76 30 76-30M90 155l-47-32m47 32 47-32"/></svg></div><div id="result-value">—</div></div>
+        <div class="result-bottom"><strong id="result-outcome">意图不是结果</strong><span id="result-detail">设定条件，让随机结果留下记录。</span></div>
+      </div>
+      <button class="roll-button" id="roll-button" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="15" r="1"/><circle cx="12" cy="12" r="1"/></svg><span>掷骰判定</span><small id="roll-tag">D20</small></button>
+    </form>
+    <div class="result-actions"><button id="copy" type="button" disabled>复制结果</button><button id="insert" type="button" disabled>写入聊天草稿 <span>↗</span></button></div>
+    <p id="status" class="status" role="status" aria-live="polite">安装后随用户发送自动掷骰 · 无需额外模型接口</p>
+    <section class="history-section" aria-labelledby="history-title"><div class="section-heading"><h2 id="history-title">掷骰记录 <span id="history-count">0</span></h2><div><button id="export" type="button" disabled>导出</button><button id="clear" type="button" disabled>清空</button></div></div><div id="history"><div class="empty-history"><span>◇</span><p>每一次未知，都有迹可循。</p><small>最近 100 次结果保存在当前浏览器。</small></div></div></section>
+    <details class="instructions"><summary>骰子如何参与剧情？</summary><p>在酒馆正常发送输入 → 生成前按本地关键词规则分类并掷骰 → 自动把结果附加到本次模型请求 → 窗口显示记录。无需手动复制。下方三个标签也可手动试掷。</p><p>例：躲避斩击做行动检定；睡到早晨做候选夜袭的事件检定。介入者须已具备动机、情报与抵达条件，没有合理候选事件时不得强行打断。</p><p>规则分类不具备模型级语义理解，也不自动计算英灵能力或场景难度。模型仍负责解释后果，提示词不能保证所有模型严格服从。自动结果仅附加到当次请求，不改原始用户消息、预设或表格；重生成和群聊同轮复用缓存点数，quiet / impersonate 不掷骰。</p><p>自然 1 / 20 不自动必败 / 必成；这是简化规则，不是完整 D&amp;D 系统。历史按浏览器保存，跨聊天共用，记录时间是现实时间。每轮缓存与历史有容量限制；清空后刷新或超过保留范围可能重新掷骰。本工具不提供防篡改保证。</p></details>
+  </main>
+  <footer><span>CRYPTO RNG</span><span id="connection">独立页面</span><span>v0.2.0</span></footer>
+</div>
+<script type="module" src="panel.js"></script>
+</body></html>

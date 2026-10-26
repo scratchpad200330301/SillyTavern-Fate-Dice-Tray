@@ -1,0 +1,7 @@
+#fate-dice-tray-window{position:fixed;top:6vh;right:4vw;width:600px;height:820px;max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);min-width:min(340px,calc(100vw - 20px));min-height:420px;z-index:3100;border:1px solid #c8cde2;border-radius:22px;box-shadow:0 24px 85px #10192b66;overflow:hidden;resize:both;background:#f7f8fd;color:#28334c}
+#fate-dice-tray-window[hidden]{display:none!important}
+#fate-dice-tray-window.fdt-max{inset:10px!important;width:calc(100vw - 20px)!important;height:calc(100dvh - 20px)!important;resize:none;min-height:0}
+#fate-dice-tray-window iframe{border:0;width:100%;height:100%;display:block;color-scheme:light}
+#fate-dice-tray-settings{padding:8px 0}
+#fate-dice-tray-settings small{display:block;opacity:.7;margin-top:5px}
+@media(max-width:600px){#fate-dice-tray-window{inset:10px!important;width:calc(100vw - 20px)!important;height:calc(100dvh - 20px)!important;resize:none;min-height:0}}
